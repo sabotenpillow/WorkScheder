@@ -1,0 +1,10 @@
+/* 日曜日 */
+.fc-sun {
+  color: red;
+  background-color: #fff0f0;
+}
+/* 土曜日 */
+.fc-sat {
+  color: blue;
+  background-color: #f0f0ff;
+}

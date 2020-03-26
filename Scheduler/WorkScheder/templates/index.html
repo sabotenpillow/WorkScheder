@@ -3,18 +3,44 @@
 <html>
   <head>
     <meta>
+    <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
     <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
     <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
     <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
     <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
     <script>
+      var calendar;
+      var workSched = JSON.parse('{{workSched | safe}}');
+      var addWorkSched = function(work_sched) {
+        for ( ws of work_sched ) {
+          var color
+          if ( ws['sched'] == '休' ) {
+            color = 'darkgray'
+          } else if ( ws['sched'] == '日' ) {
+            color = 'royalblue'
+          } else {
+            color = 'lightseagreen'
+          }
+          calendar.addEvent({
+            'title':           ws['sched'],
+            'start':           ws['date'],
+            'backgroundColor': color,
+            'borderColor':     color,
+          });
+        }
+      }
       document.addEventListener('DOMContentLoaded', function(){
         // DOMを取得
         var calendarEl = document.getElementById('calendar');
         // 指定DOMにカレンダープラグインを適用する
-        var calendar = new FullCalendar.Calendar(calendarEl,
-                      {plugins: ['dayGrid']});
+        calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: ['dayGrid'],
+          eventClick: function(info) {
+            //info.event.tile = 
+          }
+        });
         calendar.render();
+        addWorkSched(workSched)
       });
     </script>
   </head>
