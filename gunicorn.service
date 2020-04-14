@@ -1,0 +1,21 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+PIDFile=/run/gunicorn/pid
+User=vagrant
+Group=vagrant
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/vagrant/dev/workScheder/Scheduler
+ExecStart=/home/vagrant/dev/workScheder/.venv/bin/gunicorn \
+          --pid /run/gunicorn/pid \
+          --bind unix:/run/gunicorn.sock \
+          Scheduler.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[INstall]
+WantedBy=multi-user.target
