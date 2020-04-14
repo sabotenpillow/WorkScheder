@@ -31,20 +31,18 @@
         });
         calendar.render();
         //addWorkSched(JSON.parse('{{workSched | safe}}'))
-        //calendar.addEvents(get_monthlyWorkSched())
         get_monthlyWorkSched();
       });
       var get_monthlyWorkSched = function() {
-        console.log('called get_month....')
         document.getElementsByClassName('fc-prev-button')[0]
-          .addEventListener('click',
-            function(){get_monthlyWorkSched()})
+          .addEventListener('click', function(){get_monthlyWorkSched()})
         document.getElementsByClassName('fc-next-button')[0]
-          .addEventListener('click',
-            function(){get_monthlyWorkSched()})
+          .addEventListener('click', function(){get_monthlyWorkSched()})
         var date =
-          document.getElementsByClassName('fc-left')[0]
-          .innerText.split(' ')
+          document.getElementsByClassName('fc-left')[0].innerText.split(' ')
+        for (e of calendar.getEvents()) {
+          e.remove()
+        }
         getWorkSched(date[1], months.indexOf(date[0])+1)
       }
       var err_log = function(msg) {
