@@ -29,3 +29,9 @@ var getWorkSched = function(year, month) {
     addWorkSched(json)
   });
 }
+
+var upd_workSched = function(element, workSched) {
+  element.text                  = workSched
+  element.style.backgroundColor = worksColor[workSched];
+  element.style.borderColor     = worksColor[workSched];
+}
