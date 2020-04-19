@@ -7,3 +7,14 @@ unlink:
 	unlink /etc/nginx/conf.d/gunicorn.conf
 	unlink /etc/systemd/system/gunicorn.service
 	unlink /etc/systemd/system/gunicorn.socket
+
+restart-services:
+	systemctl restart nginx.service
+	systemctl restart gunicorn.service
+	systemctl restart gunicorn.socket
+
+collectstatic:
+	cd Scheduler/; \
+	python manage.py collectstatic --noinput --clear > /dev/null; \
+	python manage.py collectstatic --noinput > /dev/null
+
