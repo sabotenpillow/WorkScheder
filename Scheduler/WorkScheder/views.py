@@ -35,6 +35,9 @@ class IndexView(generic.TemplateView):
         context['workSched'] = json.dumps(ws)
         return context
 
+    def post(self, request, *args, **kwargs):
+        return HttpResponse(request.body)
+
 class ApiView(generic.View):
     def get(self, request, *args, **kwargs):
         year  = self.kwargs.get('year')

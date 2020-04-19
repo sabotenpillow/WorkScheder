@@ -17,6 +17,8 @@
         'July', 'August', 'September', 'October', 'November', 'December'
       ]
       var changes = {};
+      var elem_sendChanges
+      var elem_changesData
       document.addEventListener('DOMContentLoaded', function(){
         // DOMを取得
         var calendarEl = document.getElementById('calendar');
@@ -31,6 +33,13 @@
         calendar.render();
         //addWorkSched(JSON.parse('{{workSched | safe}}'))
         get_monthlyWorkSched();
+
+        //---- link function to sendChange button
+        elem_sendChanges= document.getElementById("sendChangesForm")
+        elem_changesData = document.getElementById("changes")
+        elem_sendChanges.addEventListener('submit', e => {
+          elem_changesData.value = JSON.stringify(changes)
+        });
       });
       var get_monthlyWorkSched = function() {
         document.getElementsByClassName('fc-prev-button')[0]
@@ -63,5 +72,10 @@
   </head>
   <body>
     <div id='calendar'></div>
+    <form action="" id="sendChangesForm" method="post" align="center">
+      <button type="submit">send changes</button>
+      <input type="hidden" id="changes" name="changes">
+      {% csrf_token %}
+    </form>
   </body>
 </html>
