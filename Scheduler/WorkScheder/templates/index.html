@@ -57,7 +57,7 @@
         var year = info.event.start.getFullYear().toString()
         var month = zeroPadding(info.event.start.getMonth() + 1, 2)
         var day = zeroPadding(info.event.start.getDate(), 2)
-        var key = year + month + day
+        var key = year + '-' + month + '-'  + day
         var workSched = info.el.text
         var new_workSched = works[
           (works.indexOf(workSched) + 1) % works.length
@@ -74,6 +74,7 @@
     <div id='calendar'></div>
     <form action="" id="sendChangesForm" method="post" align="center">
       <button type="submit">send changes</button>
+      <input type="hidden" name="_method" value="PUT">
       <input type="hidden" id="changes" name="changes">
       {% csrf_token %}
     </form>

@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.views import generic
 import json
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from django.http import HttpResponse
+from WorkScheder.models import WorkSchedule
+import pdb
 
 SERVICE_DOMAIN = 'localhost:8000'
 
@@ -12,12 +14,38 @@ def get_workSched(d):
     index       = (d - date(1970, 1, 1)).days + 1
     return workPattern[(index + MAGIC_NUBER) % len(workPattern)]
 
+def save_workSched(worksched):
+    for dt, ws in worksched.items():
+        dt = datetime.strptime(dt, '%Y-%m-%d').date()
+        is_changed = not (get_workSched(dt) == ws)
+        resistered = WorkSchedule.objects.filter(date=dt)
+        if resistered:
+            resistered = resistered.get(date=dt)
+            if is_changed:
+                #WorkSchedule.objects.update()
+                resistered.work_schedule = ws
+                resistered.save()
+            else:
+                resistered.delete()
+        else:
+            if is_changed:
+                #WorkSchedule(date=dt, work_schedule=ws).save()
+                WorkSchedule.objects.create(date=dt, work_schedule=ws)
+
 def get_monthlyWorkSched(year, month):
-    mWorkSched = []
+    start = date(year, month, 1)
+    end   = date(year, month+1, 1)
+    changed_ws = \
+        WorkSchedule.objects.filter(date__gte=start, date__lt=end)
+    monthly_ws = []
     for i in range(1, lastDay(year, month)+1):
-        d = date(year, month, i)
-        mWorkSched.append({ 'sched':get_workSched(d), 'date':str(d) })
-    return mWorkSched
+        dt = date(year, month, i)
+        try:
+            ws = changed_ws.get(date=dt).work_schedule
+        except WorkSchedule.DoesNotExist:
+            ws = get_workSched(dt)
+        monthly_ws.append({ 'sched':ws, 'date':str(dt) })
+    return monthly_ws
 
 def lastDay(year, month):
     return (date(year, month+1, 1) - timedelta(days=1)).day
@@ -27,6 +55,12 @@ def lastDay(year, month):
 class IndexView(generic.TemplateView):
     template_name = 'index.html'
 
+    def dispatch(self, *args, **kwargs):
+        method = self.request.POST.get('_method', '').lower()
+        if method == 'put':
+            return self.put(*args, **kwargs)
+        return super(IndexView, self).dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context              = super().get_context_data(**kwargs)
         today                = date.today()
@@ -35,8 +69,11 @@ class IndexView(generic.TemplateView):
         context['workSched'] = json.dumps(ws)
         return context
 
-    def post(self, request, *args, **kwargs):
-        return HttpResponse(request.body)
+    def put(self, *args, **kwargs):
+        if 'changes' in self.request.POST:
+            changes = json.loads(self.request.POST['changes'])
+            save_workSched(changes)
+        return super().get(self.request, *args, **kwargs)
 
 class ApiView(generic.View):
     def get(self, request, *args, **kwargs):

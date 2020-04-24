@@ -2,3 +2,6 @@
 .env
 node_modules/
 Scheduler/static/
+migrations/
+__pycache__/
+db.sqlite3
