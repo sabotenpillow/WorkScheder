@@ -21,4 +21,4 @@ collectstatic:
 	python manage.py collectstatic --noinput > /dev/null
 
 manage.py:
-	env DJANGO_READ_ENV_FILE=true python Scheduler/manage.py $(PYTHON_CMD)
+	env DJANGO_READ_ENV_FILE=true python Scheduler/manage.py $(DJANGO_CMD)
