@@ -72,8 +72,11 @@
   </head>
   <body>
     <div id='calendar'></div>
+    <br>
     <form action="" id="sendChangesForm" method="post" align="center">
-      <button type="submit">send changes</button>
+      <button type="submit" class="fc-button fc-button-primary">
+        SEND CHANGE
+      </button>
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" id="changes" name="changes">
       {% csrf_token %}
