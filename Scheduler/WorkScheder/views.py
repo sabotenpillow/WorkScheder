@@ -9,7 +9,7 @@ import pdb
 SERVICE_DOMAIN = 'localhost:8000'
 
 def get_workSched(d):
-    workPattern = "夜明日休夜明休休夜明休休夜明日日夜明休日夜明休休夜明日日"
+    workPattern = "夜明休休夜明休休夜明日日夜明日休夜明休休夜明日日夜明休日"
     MAGIC_NUBER = 3
     index       = (d - date(1970, 1, 1)).days + 1
     return workPattern[(index + MAGIC_NUBER) % len(workPattern)]
