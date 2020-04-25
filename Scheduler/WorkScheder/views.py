@@ -16,7 +16,7 @@ def get_workSched(d):
 
 def save_workSched(worksched):
     for dt, ws in worksched.items():
-        dt = datetime.strptime(dt, '%Y-%m-%d').date()
+        dt         = datetime.strptime(dt, '%Y-%m-%d').date()
         is_changed = not (get_workSched(dt) == ws)
         resistered = WorkSchedule.objects.filter(date=dt)
         if resistered:
@@ -33,8 +33,8 @@ def save_workSched(worksched):
                 WorkSchedule.objects.create(date=dt, work_schedule=ws)
 
 def get_monthlyWorkSched(year, month):
-    start = date(year, month, 1)
-    end   = date(year, month+1, 1)
+    start      = date(year, month, 1)
+    end        = date(year, month+1, 1)
     changed_ws = \
         WorkSchedule.objects.filter(date__gte=start, date__lt=end)
     monthly_ws = []

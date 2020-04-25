@@ -54,11 +54,11 @@
         getWorkSched(date[1], months.indexOf(date[0])+1)
       }
       var rotate_workSched = function(info) {
-        var year = info.event.start.getFullYear().toString()
-        var month = zeroPadding(info.event.start.getMonth() + 1, 2)
-        var day = zeroPadding(info.event.start.getDate(), 2)
-        var key = year + '-' + month + '-'  + day
-        var workSched = info.el.text.trim()
+        var year          = info.event.start.getFullYear().toString()
+        var month         = zeroPadding(info.event.start.getMonth() + 1, 2)
+        var day           = zeroPadding(info.event.start.getDate(), 2)
+        var key           = year + '-' + month + '-'  + day
+        var workSched     = info.el.text.trim()
         var new_workSched = works[
           (works.indexOf(workSched) + 1) % works.length
         ]
