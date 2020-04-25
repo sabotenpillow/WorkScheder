@@ -18,3 +18,6 @@ collectstatic:
 	python manage.py collectstatic --noinput --clear > /dev/null; \
 	python manage.py collectstatic --noinput > /dev/null
 
+runserver:
+	env DJANGO_READ_ENV_FILE=true python Scheduler/manage.py runserver 0:8800
+
