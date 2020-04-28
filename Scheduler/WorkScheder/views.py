@@ -4,6 +4,7 @@ import json
 from datetime import datetime, date, timedelta
 from django.http import HttpResponse
 from WorkScheder.models import WorkSchedule
+from django.contrib.auth.mixins import LoginRequiredMixin
 import pdb
 
 SERVICE_DOMAIN = 'localhost:8000'
@@ -52,7 +53,7 @@ def lastDay(year, month):
 
 # Create your views here.
 
-class IndexView(generic.TemplateView):
+class IndexView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'index.html'
 
     def dispatch(self, *args, **kwargs):
@@ -75,7 +76,7 @@ class IndexView(generic.TemplateView):
             save_workSched(changes)
         return super().get(self.request, *args, **kwargs)
 
-class ApiView(generic.View):
+class ApiView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
         year  = self.kwargs.get('year')
         month = self.kwargs.get('month')

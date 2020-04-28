@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up | Scheduler{% endblock %}
+
+{% block active_signup %}active{% endblock %}
+
+{% block contents %}
+<!--
+<div class="container">
+  <div class="row">
+    <div class="my-div-style">
+-->
+      <h1>Sing Up</h1>
+      <section class="common-form">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p  }}
+          <div align="center">
+          <button class="submit" type="submit">Sign Up</button>
+          </div>
+        </form>
+      </section>
+<!--
+    </div>
+  </div>
+</div>
+-->
+{% endblock %}
