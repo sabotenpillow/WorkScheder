@@ -1,0 +1,40 @@
+version: '2'
+services:
+  django:
+    container_name: work_scheduler
+    build: ./Scheduler/
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      - APP_PATH=/opt/apps/Scheduler
+      - DJANGO_READ_ENV_FILE=true
+    volumes:
+      - ./Scheduler:/opt/apps/Scheduler
+    expose:
+      - 8800
+    ports:
+      - "8800:8800"
+    networks:
+      - app-nw
+    working_dir: /opt/apps/Scheduler
+    command: sh -c 'python3 manage.py migrate && python3 manage.py runserver 0:8800'
+  db:
+    container_name: work_scheduler_db
+    image: mariadb:10.4.12
+    #volumes:
+    #  - /var/lib/mysql/django_scheduler:/var/lib/mysql/django_scheduler
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=mariadb
+      - MYSQL_USER=django
+      - MYSQL_PASSWORD=django
+      - MYSQL_DATABASE=django_scheduler
+    networks:
+      - app-nw
+
+networks:
+  app-nw:
+    driver: bridge
