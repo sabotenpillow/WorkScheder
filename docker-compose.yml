@@ -25,12 +25,13 @@ services:
     environment:
       APP_PATH:             $APP_PATH
       DJANGO_READ_ENV_FILE: "true"
+      DJANGO_ENVIRONMENT:   "production"
     volumes:
       - ./Scheduler:/opt/apps/Scheduler
     expose:
       - 8000
-    ports:
-      - "8000:8000"
+    #ports:
+    #  - "8000:8000"
     networks:
       - app-nw
     working_dir: $APP_PATH
