@@ -1,0 +1,12 @@
+PATH='/home/vagrant/dev/workScheder'
+
+link:
+	echo $(PATH)
+	#ln -s $(PATH)/gunicorn.conf    /etc/nginx/conf.d/gunicorn.conf
+	#ln -s $(PATH)/gunicorn.service /etc/systemd/system/gunicorn.service
+	#ln -s $(PATH)/gunicorn.socket  /etc/systemd/system/gunicorn.socket
+
+unlink:
+	unlink /etc/nginx/conf.d/gunicorn.conf
+	unlink /etc/systemd/system/gunicorn.service
+	unlink /etc/systemd/system/gunicorn.socket
