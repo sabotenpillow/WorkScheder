@@ -3,8 +3,11 @@ services:
   db:
     image: mariadb:10.4.12
     container_name: work_scheduler_db
-    #volumes:
-    #  - /var/lib/mysql/django_scheduler:/var/lib/mysql/django_scheduler
+    volumes:
+      #- /var/lib/mysql/django_scheduler:/var/lib/mysql/django_scheduler
+      #- ./mariadb_data:/var/lib/mysql/django_scheduler
+      - ./mariadb/django_scheduler_init.sql:/docker-entrypoint-initdb.d/django_scheduler_init.sql  # init SQL
+      - dbvolume:/var/lib/mysql/django_scheduler                          # data volume
     expose:
       - 3306
     environment:
@@ -53,6 +56,13 @@ services:
       - ./Scheduler/static:/var/www/static
     networks:
       - app-nw
+
+volumes:
+  dbvolume:
+    driver_opts:
+      type: none
+      device: $PWD/mariadb/mariadb_data
+      o: bind
 
 networks:
   app-nw:
