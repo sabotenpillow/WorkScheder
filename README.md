@@ -1,16 +1,18 @@
-## init
+# init
 
 ### set file & directory
 - Scheduler/.env
 - mariadb/django_scheduler_init.sql
 - `mkdir mariadb/mariadb_data`
 
+[](
 <!--
 ### install Python library
 ```
 pip install -f Scheduler/requirements.txt
 ```
 -->
+)
 
 ### install Node modules
 ```
@@ -22,7 +24,7 @@ cd Scheduler/WorkScheder/; npm install
 make manage.py collectstatic
 ```
 
-## dependencies
+# dependencies
 
 - npm
 - docker
