@@ -1,21 +1,23 @@
-var works = '夜明日休'
+var works = '夜明日休ネ'
 var worksColor = {
-  '夜': 'lightseagreen',
-  '明': 'lightseagreen',
-  '日': 'royalblue',
-  '休': 'darkgray'
+  '夜': {'bg':'darkorchid',   'border':'darkorchid'},
+  '明': {'bg':'mediumorchid', 'border':'mediumorchid'},
+  '日': {'bg':'olivedrab',    'border':'olivedrab'},
+  '休': {'bg':'darkgray',     'border':'darkgray'},
+  'ネ': {'bg':'crimson',      'border':'crimson'}
 }
 var domain = JSON.parse(document.getElementById('domain').textContent);
 
 var rotateWorkSched = function() {}
 var addWorkSched = function(work_sched) {
   for ( ws of work_sched ) {
-    var color = worksColor[ws['sched']]
+    var bg_color     = worksColor[ws['sched']].bg
+    var border_color = worksColor[ws['sched']].border
     calendar.addEvent({
       'title':           ws['sched'],
       'start':           ws['date'],
-      'backgroundColor': color,
-      'borderColor':     color,
+      'backgroundColor': bg_color,
+      'borderColor':     border_color,
     });
   }
 };
@@ -32,6 +34,6 @@ var getWorkSched = function(year, month) {
 
 var upd_workSched = function(element, workSched) {
   element.text                  = workSched
-  element.style.backgroundColor = worksColor[workSched];
-  element.style.borderColor     = worksColor[workSched];
+  element.style.backgroundColor = worksColor[workSched].bg;
+  element.style.borderColor     = worksColor[workSched].border;
 }
