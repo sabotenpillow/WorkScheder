@@ -9,7 +9,7 @@
 <!--
 ### install Python library
 ```
-pip install -f Scheduler/requirements.txt
+pip install -r Scheduler/requirements.txt
 ```
 -->
 

@@ -17,8 +17,8 @@ restart-services:
 
 collectstatic:
 	cd Scheduler/; \
-	python manage.py collectstatic --noinput --clear > /dev/null; \
-	python manage.py collectstatic --noinput > /dev/null
+	python3 manage.py collectstatic --noinput --clear > /dev/null; \
+	python3 manage.py collectstatic --noinput > /dev/null
 
 manage.py:
-	env DJANGO_READ_ENV_FILE=true DJANGO_ENVIRONMENT='development' python Scheduler/manage.py $(DJANGO_CMD)
+	env DJANGO_READ_ENV_FILE=true DJANGO_ENVIRONMENT='development' python3 Scheduler/manage.py $(DJANGO_CMD)
