@@ -16,7 +16,10 @@ def get_workSched(d):
     return workPattern[(index + MAGIC_NUBER) % len(workPattern)]
 
 def save_workSched(worksched):
+    workKind = '夜明日休ネ出'
     for dt, ws in worksched.items():
+        if not ws in workKind:
+            continue
         dt         = datetime.strptime(dt, '%Y-%m-%d').date()
         is_changed = not (get_workSched(dt) == ws)
         resistered = WorkSchedule.objects.filter(date=dt)

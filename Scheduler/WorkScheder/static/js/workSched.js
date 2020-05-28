@@ -1,10 +1,11 @@
-var works = '夜明日休ネ'
+var works = '夜明日休ネ出'
 var worksColor = {
   '夜': {'bg':'darkorchid',   'border':'darkorchid'},
   '明': {'bg':'mediumorchid', 'border':'mediumorchid'},
   '日': {'bg':'olivedrab',    'border':'olivedrab'},
   '休': {'bg':'darkgray',     'border':'darkgray'},
-  'ネ': {'bg':'crimson',      'border':'crimson'}
+  'ネ': {'bg':'crimson',      'border':'crimson'},
+  '出': {'bg':'black',        'border':'black'},
 }
 var domain = JSON.parse(document.getElementById('domain').textContent);
 
