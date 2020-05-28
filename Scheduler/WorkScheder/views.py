@@ -70,6 +70,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context['workSched'] = json.dumps(ws)
         return context
 
+    #def post(self, request, *args, **kwargs):
     def put(self, *args, **kwargs):
         if 'changes' in self.request.POST:
             changes = json.loads(self.request.POST['changes'])

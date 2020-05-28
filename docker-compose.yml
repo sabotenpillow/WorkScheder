@@ -6,7 +6,7 @@ services:
     volumes:
       #- /var/lib/mysql/django_scheduler:/var/lib/mysql/django_scheduler
       #- ./mariadb_data:/var/lib/mysql/django_scheduler
-      - ./mariadb/django_scheduler_init.sql:/docker-entrypoint-initdb.d/django_scheduler_init.sql  # init SQL
+      #- ./mariadb/django_scheduler_init.sql:/docker-entrypoint-initdb.d/django_scheduler_init.sql  # init SQL
       - dbvolume:/var/lib/mysql/django_scheduler                          # data volume
     expose:
       - 3306
@@ -15,6 +15,7 @@ services:
       - MYSQL_USER=django
       - MYSQL_PASSWORD=django
       - MYSQL_DATABASE=django_scheduler
+    command: mysqld --character-set-client=utf8mb4 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     networks:
       - app-nw
   django:
@@ -39,7 +40,7 @@ services:
       - app-nw
     working_dir: $APP_PATH
     #command: sh -c 'python3 manage.py migrate && python3 manage.py runserver 0:8000'
-    command: sh -c 'python3 manage.py migrate && gunicorn --bind 0:8000 Scheduler.wsgi'
+    command: sh -c 'python3 manage.py migrate && python3 manage.py loaddata init_users && gunicorn --bind 0:8000 Scheduler.wsgi'
   nginx:
     build: ./nginx/
     image: qtooone/work_scheduler_nginx:v1
