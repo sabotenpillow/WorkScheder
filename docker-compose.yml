@@ -42,7 +42,7 @@ services:
     #command: sh -c 'python3 manage.py migrate && python3 manage.py runserver 0:8000'
     command: >
       sh -c '
-      python3 manage.py makemigrations
+      python3 manage.py makemigrations WorkScheder
       && python3 manage.py migrate
       && python3 manage.py loaddata init_users
       && gunicorn --bind 0:8000 Scheduler.wsgi
