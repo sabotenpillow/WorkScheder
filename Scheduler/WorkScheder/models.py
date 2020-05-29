@@ -5,13 +5,13 @@ from django.db import models
 class WorkSchedule(models.Model):
     date = \
         models.DateField(
-            verbose_name = '年月日',
+            verbose_name = 'date',
             auto_now_add = False,
             unique       = True
         )
     work_schedule = \
         models.CharField(
-            verbose_name = '勤務日程',
+            verbose_name = 'work sched',
             max_length   = 5,
             null         = False,
             blank        = False
