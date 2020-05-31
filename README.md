@@ -1,10 +1,9 @@
-## init
+## Init
 <hr>
 
 ### set file & directory
 - Scheduler/.env
-- mariadb/django_scheduler_init.sql
-- `mkdir mariadb/mariadb_data`
+- Scheduler/accounts/fixtures/init_users.json
 
 <!--
 ### install Python library
@@ -20,12 +19,25 @@ cd Scheduler/WorkScheder/; npm install
 
 ### collect static
 ```
-make manage.py collectstatic
+make manage.py DJANGO_CMD=collectstatic
 ```
 
-## dependencies
+## Start
+
+```
+docker-compose up -d
+```
+
+## Dependencies
 <hr>
 
+- python3
+- libmysqlclient-dev (Ubuntu)
 - npm
 - docker
 - docker-compose
+
+execute the followings (on ubuntu):
+```
+sudo apt install python3 libmysqlclient-dev npm docker docker-compose
+```
