@@ -2,8 +2,6 @@
 .env
 node_modules/
 Scheduler/static/
-migrations/
-!Scheduler/accounts/migrations
 fixtures/
 __pycache__/
 db.sqlite3
