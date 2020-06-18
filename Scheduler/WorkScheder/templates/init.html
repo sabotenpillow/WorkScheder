@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta>
+    <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
+    <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
+    <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/workSched.js' %}"></script>
+    <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
+    <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
+    <script>
+      var calendar
+      var elem_workPattern
+      var elem_adjustNum
+      document.addEventListener('DOMContentLoaded', function(){
+        // DOMを取得
+        var calendarEl = document.getElementById('calendar');
+        // 指定DOMにカレンダープラグインを適用する
+        calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: ['dayGrid'],
+        });
+        calendar.render();
+
+        elem_workPattern = document.getElementById("work_pattern")
+        elem_adjustNum = document.getElementById("adjust_num")
+        elem_workPattern.addEventListener('change', () => {
+          update_workSchedule()
+          set_adjnumMax(get_workpattern().length)
+        })
+        elem_adjustNum.addEventListener('change', () => {
+          update_workSchedule()
+        })
+
+        add_monthlyWorkSched();
+      });
+      var add_monthlyWorkSched = function() {
+        document.getElementsByClassName('fc-prev-button')[0]
+          .addEventListener('click', function(){get_monthlyWorkSched()})
+        document.getElementsByClassName('fc-next-button')[0]
+          .addEventListener('click', function(){get_monthlyWorkSched()})
+        var date =
+          document.getElementsByClassName('fc-left')[0].innerText.split(' ')
+        clearEvents()
+        update_workSchedule()
+      }
+      function workScheduler(pattern, adjust_num) {
+        var MILISEC_OF_DAY = 86400000
+        var today      = new Date()
+        var month_1st  = new Date(today.getFullYear(), today.getMonth(), 1)
+        var month_last = new Date(today.getFullYear(), (today.getMonth()+1)%12, 0)
+        var index      = (month_1st - new Date(2000, 0, 1)) / MILISEC_OF_DAY - 1
+        var ws         = []
+
+        clearEvents()
+        for ( var dt = month_1st; dt <= month_last; dt.setDate(dt.getDate()+1) ) {
+          ws[ws.length] = {'date':date_format(dt), 'sched':pattern[(index+dt.getDate()+adjust_num) % pattern.length]}
+        }
+        addWorkSched(ws)
+      }
+      function clearEvents() {
+        for (e of calendar.getEvents()) {
+          e.remove()
+        }
+      }
+      function date_format(dt) {
+        var year  = dt.getFullYear()
+        var month = zeroPadding(dt.getMonth()+1, 2)
+        var day   = zeroPadding(dt.getDate(),    2)
+        return  year + "-" + month + "-" + day
+      }
+      function zeroPadding(num, length) {
+        return ('00000000000' + num).slice(-length)
+      }
+      function update_workSchedule() {
+        var pattern = get_workpattern()
+        var adj_num = get_adjnum()
+        workScheduler(pattern, adj_num)
+      }
+      function get_workpattern() {
+          num  = elem_workPattern.selectedIndex
+          return elem_workPattern.options[num].textContent
+      }
+      function get_adjnum() {
+        return Number(elem_adjustNum.value)
+      }
+      function set_adjnumMax(value) {
+        elem_adjustNum.max = value
+      }
+    </script>
+  </head>
+  <body>
+    <div id='calendar'></div>
+    <br>
+    <form action="" id="sendChangesForm" method="post" align="center">
+      <select name="workPattern" id="work_pattern">
+        {% for wp in workpatterns_list %}
+          <option value="{{ wp.id }}">{{ wp.pattern }}</option>
+          {% empty %}
+            <p>nothing.</p>
+        {% endfor %}
+        <!--
+        <option value="id_1">夜明休休夜明休休夜明日日夜明日休夜明休休夜明日日夜明休日</option>
+        <option value="id_2">夜明休休夜明休休夜明日日夜明休日夜明休休夜明日日夜明日休</option>
+        -->
+      </select>
+      <br><br>
+      <input type="number" value="0" min="0" step="1" id="adjust_num">
+      <br><br>
+      <button type="submit" class="fc-button fc-button-primary">
+        REGISTER
+      </button>
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" id="changes" name="changes">
+      {% csrf_token %}
+    </form>
+  </body>
+</html>

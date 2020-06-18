@@ -7,7 +7,7 @@ var worksColor = {
   'ネ': {'bg':'crimson',      'border':'crimson'},
   '出': {'bg':'black',        'border':'black'},
 }
-var domain = JSON.parse(document.getElementById('domain').textContent);
+//var domain = JSON.parse(document.getElementById('domain').textContent);
 
 var rotateWorkSched = function() {}
 var addWorkSched = function(work_sched) {

@@ -3,8 +3,9 @@ from django.views import generic
 import json
 from datetime import datetime, date, timedelta
 from django.http import HttpResponse
-from WorkScheder.models import WorkSchedule
 from django.contrib.auth.mixins import LoginRequiredMixin
+from WorkScheder.models import WorkSchedule
+from accounts.models import WorkPatterns
 import pdb
 
 SERVICE_DOMAIN = 'localhost:8000'
@@ -14,7 +15,7 @@ def get_workSched(d, user):
     #MAGIC_NUBER = 3
     pattern = user.workPattern.pattern
     adj_num = user.adjust_num
-    index       = (d - date(1970, 1, 1)).days + 1
+    index       = (d - date(2000, 1, 1)).days
     return pattern[(index + adj_num ) % len(pattern)]
 
 def save_workSched(worksched, user):
@@ -82,6 +83,14 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             changes = json.loads(self.request.POST['changes'])
             save_workSched(changes, user)
         return super().get(self.request, *args, **kwargs)
+
+class InitView(LoginRequiredMixin, generic.ListView):
+    template_name = 'init.html'
+    model = WorkPatterns
+
+    #def get_context_data(self, **kwargs):
+    #    context = super().get_context_data(**kwargs)
+    #    return context
 
 class ApiView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
