@@ -9,20 +9,22 @@ import pdb
 
 SERVICE_DOMAIN = 'localhost:8000'
 
-def get_workSched(d):
-    workPattern = "夜明休休夜明休休夜明日日夜明日休夜明休休夜明日日夜明休日"
-    MAGIC_NUBER = 3
+def get_workSched(d, user):
+    #workPattern = "夜明休休夜明休休夜明日日夜明日休夜明休休夜明日日夜明休日"
+    #MAGIC_NUBER = 3
+    pattern = user.workPattern.pattern
+    adj_num = user.adjust_num
     index       = (d - date(1970, 1, 1)).days + 1
-    return workPattern[(index + MAGIC_NUBER) % len(workPattern)]
+    return pattern[(index + adj_num ) % len(pattern)]
 
-def save_workSched(worksched, uid):
+def save_workSched(worksched, user):
     workKind = '夜明日休ネ出'
     for dt, ws in worksched.items():
         if not ws in workKind:
             continue
         dt         = datetime.strptime(dt, '%Y-%m-%d').date()
-        is_changed = not (get_workSched(dt) == ws)
-        resistered = WorkSchedule.objects.filter(date=dt, user_id=uid)
+        is_changed = not (get_workSched(dt, user) == ws)
+        resistered = WorkSchedule.objects.filter(date=dt, user_id=user.id)
         if resistered:
             resistered = resistered.get(date=dt)
             if is_changed:
@@ -34,20 +36,20 @@ def save_workSched(worksched, uid):
         else:
             if is_changed:
                 #WorkSchedule(date=dt, work_schedule=ws).save()
-                WorkSchedule.objects.create(date=dt, work_schedule=ws, user_id=uid)
+                WorkSchedule.objects.create(date=dt, work_schedule=ws, user_id=user.id)
 
-def get_monthlyWorkSched(year, month, uid):
+def get_monthlyWorkSched(year, month, user):
     start      = date(year, month, 1)
     end        = date(year, month+1, 1)
     changed_ws = \
-        WorkSchedule.objects.filter(date__gte=start, date__lt=end, user_id=uid)
+        WorkSchedule.objects.filter(date__gte=start, date__lt=end, user_id=user.id)
     monthly_ws = []
     for i in range(1, lastDay(year, month)+1):
         dt = date(year, month, i)
         try:
             ws = changed_ws.get(date=dt).work_schedule
         except WorkSchedule.DoesNotExist:
-            ws = get_workSched(dt)
+            ws = get_workSched(dt, user)
         monthly_ws.append({ 'sched':ws, 'date':str(dt) })
     return monthly_ws
 
@@ -76,16 +78,18 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
     #def post(self, request, *args, **kwargs):
     def put(self, *args, **kwargs):
         if 'changes' in self.request.POST:
-            uid     = self.request.user.id
+            user    = self.request.user
             changes = json.loads(self.request.POST['changes'])
-            save_workSched(changes, uid)
+            save_workSched(changes, user)
         return super().get(self.request, *args, **kwargs)
 
 class ApiView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
-        uid   = self.request.user.id
+        user  = self.request.user
+        if user.workPattern is None:
+            return HttpResponse(json.dumps([]))
         year  = self.kwargs.get('year')
         month = self.kwargs.get('month')
-        ws    = get_monthlyWorkSched(year, month, uid)
+        ws    = get_monthlyWorkSched(year, month, user)
         return HttpResponse(json.dumps(ws))
 
