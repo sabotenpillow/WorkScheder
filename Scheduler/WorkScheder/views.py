@@ -5,7 +5,8 @@ from datetime import datetime, date, timedelta
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from WorkScheder.models import WorkSchedule
-from accounts.models import WorkPatterns
+from accounts.models import WorkPatterns, User
+from accounts.forms import UserUpdateForm, UserWorkPatternUpdateForm
 import pdb
 
 SERVICE_DOMAIN = 'localhost:8000'
@@ -84,13 +85,10 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             save_workSched(changes, user)
         return super().get(self.request, *args, **kwargs)
 
-class InitView(LoginRequiredMixin, generic.ListView):
+class InitView(LoginRequiredMixin, generic.FormView):
     template_name = 'init.html'
     model = WorkPatterns
-
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
+    form_class = UserWorkPatternUpdateForm
 
 class ApiView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):

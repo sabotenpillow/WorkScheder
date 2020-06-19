@@ -13,6 +13,7 @@
       var calendar
       var elem_workPattern
       var elem_adjustNum
+      var gTimer
       document.addEventListener('DOMContentLoaded', function(){
         // DOMを取得
         var calendarEl = document.getElementById('calendar');
@@ -22,14 +23,17 @@
         });
         calendar.render();
 
-        elem_workPattern = document.getElementById("work_pattern")
-        elem_adjustNum = document.getElementById("adjust_num")
+        elem_workPattern = document.getElementById("id_workPattern")
+        elem_adjustNum = document.getElementById("id_adjust_num")
+        elem_adjustNum.min = 0
         elem_workPattern.addEventListener('change', () => {
           update_workSchedule()
-          set_adjnumMax(get_workpattern().length)
+          set_adjnumMax(get_workpattern().length - 1)
         })
         elem_adjustNum.addEventListener('change', () => {
-          update_workSchedule()
+          if ( gTimer ) { clearTimeout(gTimer); }
+          gTimer = setTimeout(update_workSchedule, 300)
+          //update_workSchedule()
         })
 
         add_monthlyWorkSched();
@@ -78,8 +82,8 @@
         workScheduler(pattern, adj_num)
       }
       function get_workpattern() {
-          num  = elem_workPattern.selectedIndex
-          return elem_workPattern.options[num].textContent
+        num  = elem_workPattern.selectedIndex
+        return elem_workPattern.options[num].textContent
       }
       function get_adjnum() {
         return Number(elem_adjustNum.value)
@@ -93,20 +97,23 @@
     <div id='calendar'></div>
     <br>
     <form action="" id="sendChangesForm" method="post" align="center">
+      <table align="center">
+      {{ form.as_table }}
+      </table>
+      <!--
       <select name="workPattern" id="work_pattern">
         {% for wp in workpatterns_list %}
           <option value="{{ wp.id }}">{{ wp.pattern }}</option>
           {% empty %}
             <p>nothing.</p>
         {% endfor %}
-        <!--
         <option value="id_1">夜明休休夜明休休夜明日日夜明日休夜明休休夜明日日夜明休日</option>
         <option value="id_2">夜明休休夜明休休夜明日日夜明休日夜明休休夜明日日夜明日休</option>
-        -->
       </select>
       <br><br>
       <input type="number" value="0" min="0" step="1" id="adjust_num">
       <br><br>
+      -->
       <button type="submit" class="fc-button fc-button-primary">
         REGISTER
       </button>

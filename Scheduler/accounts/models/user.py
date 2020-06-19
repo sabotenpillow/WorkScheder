@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 from .workpatterns import WorkPatterns
 
 # Create your models here.
@@ -50,7 +51,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         },
     )
     workPattern = models.ForeignKey(WorkPatterns, null=True, on_delete=models.SET_NULL)
-    adjust_num  = models.IntegerField( verbose_name='adjust number', null=True )
+    adjust_num  = models.IntegerField(
+        verbose_name = 'adjust number',
+        default      = 0,
+        validators   = [ MinValueValidator(0) ]
+    )
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
