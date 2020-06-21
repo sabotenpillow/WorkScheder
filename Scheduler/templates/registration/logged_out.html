@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
 
 {% block js  %}
 setTimeout("redirect()", 3000)
@@ -9,6 +11,6 @@ function redirect() {
 
 {% block contents  %}
 
-<h1>Logged Out</h1>
+<h1 align="center">Logged Out</h1>
 
 {% endblock %}

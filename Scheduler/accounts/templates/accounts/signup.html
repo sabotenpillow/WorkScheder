@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load bootstrap4 %}
+
 {% block title %}Sign Up{% endblock %}
 
 {% block active_signup %}active{% endblock %}
@@ -14,9 +16,9 @@
       <section class="common-form">
         <form method="post">
           {% csrf_token %}
-          {{ form.as_p  }}
+          {% bootstrap_form form layout="horizontal" %}
           <div align="center">
-          <button class="submit" type="submit">Sign Up</button>
+          {% bootstrap_button "Sign Up" %}
           </div>
         </form>
       </section>

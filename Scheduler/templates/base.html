@@ -1,38 +1,41 @@
 {% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Work Calendar</title>
-    <script type="text/javascript">
-        {% block js %}{% endblock %}
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Work Calendar</title>
+  <script type="text/javascript">
+    {% block js %}{% endblock %}
+  </script>
 </head>
 <body>
 <div class="container">
-    <header>
-      <!--<p class="site-name"><a href="{% url 'worksched:index' %}">Work Calendar</a></p>-->
-        <nav>
-            <ul>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'worksched:update' user.pk %}" class="logout">Pattern Update</a></li>
-                <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
-                {% else %}
-                <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li>
-                <li><a href="{% url 'login' %}" class="login">Login</a></li>
-                {% endif %}
-                <!--
-                <li><a href="{# url 'api' #}" class="act">Add Post</a></li>
-                -->
-            </ul>
-        </nav>
-    </header>
-    <div class="content">
-        {% block contents %}{% endblock %}
-    </div>
+  <header>
+    <!--<p class="site-name"><a href="{% url 'worksched:index' %}">Work Calendar</a></p>-->
+    <nav>
+      <ul>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'worksched:update' user.pk %}" class="logout">Pattern Update</a></li>
+        <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li>
+        <li><a href="{% url 'login' %}" class="login">Login</a></li>
+        {% endif %}
+        <!--
+        <li><a href="{# url 'api' #}" class="act">Add Post</a></li>
+        -->
+      </ul>
+    </nav>
+  </header>
+  <div class="content">
+    {% block contents %}{% endblock %}
+  </div>
 </div>
 </body>
 </html>

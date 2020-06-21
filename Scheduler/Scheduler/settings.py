@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'WorkScheder.apps.WorkschederConfig',
     'accounts.apps.AccountsConfig',
+    'bootstrap4',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

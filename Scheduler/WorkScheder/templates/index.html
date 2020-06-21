@@ -1,4 +1,6 @@
 {% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -74,9 +76,7 @@
     <div id='calendar'></div>
     <br>
     <form action="" id="sendChangesForm" method="post" align="center">
-      <button type="submit" class="fc-button fc-button-primary">
-        SAVE
-      </button>
+      {% bootstrap_button "SAVE" button_class="btn-primary" %}
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" id="changes" name="changes">
       {% csrf_token %}

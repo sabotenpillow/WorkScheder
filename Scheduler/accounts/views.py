@@ -9,6 +9,7 @@ from .forms import UserUpdateForm
 
 class SignUpView(generic.CreateView):
     form_class    = UserCreationForm
+    model         = User
     success_url   = reverse_lazy('worksched:login')
     template_name = 'accounts/signup.html'
     #def dispatch(self, *args, **kwargs):

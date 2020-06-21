@@ -1,4 +1,6 @@
 {% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -100,23 +102,7 @@
       <table align="center">
       {{ form.as_table }}
       </table>
-      <!--
-      <select name="workPattern" id="work_pattern">
-        {% for wp in workpatterns_list %}
-          <option value="{{ wp.id }}">{{ wp.pattern }}</option>
-          {% empty %}
-            <p>nothing.</p>
-        {% endfor %}
-        <option value="id_1">夜明休休夜明休休夜明日日夜明日休夜明休休夜明日日夜明休日</option>
-        <option value="id_2">夜明休休夜明休休夜明日日夜明休日夜明休休夜明日日夜明日休</option>
-      </select>
-      <br><br>
-      <input type="number" value="0" min="0" step="1" id="adjust_num">
-      <br><br>
-      -->
-      <button type="submit" class="fc-button fc-button-primary">
-        SAVE
-      </button>
+      {% bootstrap_button "SAVE" %}
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" id="changes" name="changes">
       {% csrf_token %}

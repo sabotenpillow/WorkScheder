@@ -19,6 +19,7 @@ var addWorkSched = function(work_sched) {
       'start':           ws['date'],
       'backgroundColor': bg_color,
       'borderColor':     border_color,
+      'textColor':       'white',
     });
   }
 };
