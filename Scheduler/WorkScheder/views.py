@@ -90,7 +90,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             save_workSched(changes, user)
         return super().get(self.request, *args, **kwargs)
 
-class UpdateView(MyselfOnlyMixin, generic.UpdateView):
+class SetPatternView(MyselfOnlyMixin, generic.UpdateView):
     template_name = 'update.html'
     model         = User
     form_class    = UserWorkPatternUpdateForm
