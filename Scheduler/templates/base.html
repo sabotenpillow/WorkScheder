@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Work Calendar</title>
+  {% block head %}{% endblock %}
   <script type="text/javascript">
     {% block js %}{% endblock %}
   </script>
@@ -18,19 +19,22 @@
 <div class="container">
   <header>
     <!--<p class="site-name"><a href="{% url 'worksched:index' %}">Work Calendar</a></p>-->
-    <nav>
-      <ul>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'worksched:update' user.pk %}" class="logout">Pattern Update</a></li>
-        <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
-        {% else %}
-        <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li>
-        <li><a href="{% url 'login' %}" class="login">Login</a></li>
-        {% endif %}
-        <!--
-        <li><a href="{# url 'api' #}" class="act">Add Post</a></li>
-        -->
-      </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <span class="navbar-bland mb-0 h3">WorkSchedule</span>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'worksched:update' user.pk %}">Pattern Update</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link signup" href="{% url 'accounts:signup' %}">Sign up</a></li>
+          <li class="nav-item"><a class="nav-link login"  href="{% url 'login' %}">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </nav>
   </header>
   <div class="content">

@@ -1,111 +1,109 @@
+{% extends "base.html" %}
 {% load static %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <meta>
-    <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
-    <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
-    <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
-    <script src="{% static 'js/workSched.js' %}"></script>
-    <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
-    <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
-    <script>
-      var calendar
-      var elem_workPattern
-      var elem_adjustNum
-      var gTimer
-      document.addEventListener('DOMContentLoaded', function(){
-        // DOMを取得
-        var calendarEl = document.getElementById('calendar');
-        // 指定DOMにカレンダープラグインを適用する
-        calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: ['dayGrid'],
-        });
-        calendar.render();
 
-        elem_workPattern = document.getElementById("id_workPattern")
-        elem_adjustNum = document.getElementById("id_adjust_num")
-        elem_adjustNum.min = 0
-        elem_workPattern.addEventListener('change', () => {
-          update_workSchedule()
-          set_adjnumMax(get_workpattern().length - 1)
-        })
-        elem_adjustNum.addEventListener('change', () => {
-          if ( gTimer ) { clearTimeout(gTimer); }
-          gTimer = setTimeout(update_workSchedule, 300)
-          //update_workSchedule()
-        })
-
-        add_monthlyWorkSched();
+{% block head %}
+  <meta>
+  <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
+  <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
+  <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
+  <script src="{% static 'js/workSched.js' %}"></script>
+  <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
+  <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
+  <script>
+    var calendar
+    var elem_workPattern
+    var elem_adjustNum
+    var gTimer
+    document.addEventListener('DOMContentLoaded', function(){
+      // DOMを取得
+      var calendarEl = document.getElementById('calendar');
+      // 指定DOMにカレンダープラグインを適用する
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        plugins: ['dayGrid'],
       });
-      var add_monthlyWorkSched = function() {
-        document.getElementsByClassName('fc-prev-button')[0]
-          .addEventListener('click', function(){get_monthlyWorkSched()})
-        document.getElementsByClassName('fc-next-button')[0]
-          .addEventListener('click', function(){get_monthlyWorkSched()})
-        var date =
-          document.getElementsByClassName('fc-left')[0].innerText.split(' ')
-        clearEvents()
-        update_workSchedule()
-      }
-      function workScheduler(pattern, adjust_num) {
-        var MILISEC_OF_DAY = 86400000
-        var today      = new Date()
-        var month_1st  = new Date(today.getFullYear(), today.getMonth(), 1)
-        var month_last = new Date(today.getFullYear(), (today.getMonth()+1)%12, 0)
-        var index      = (month_1st - new Date(2000, 0, 1)) / MILISEC_OF_DAY - 1
-        var ws         = []
+      calendar.render();
 
-        clearEvents()
-        for ( var dt = month_1st; dt <= month_last; dt.setDate(dt.getDate()+1) ) {
-          ws[ws.length] = {'date':date_format(dt), 'sched':pattern[(index+dt.getDate()+adjust_num) % pattern.length]}
-        }
-        addWorkSched(ws)
+      elem_workPattern = document.getElementById("id_workPattern")
+      elem_adjustNum = document.getElementById("id_adjust_num")
+      elem_adjustNum.min = 0
+      elem_workPattern.addEventListener('change', () => {
+        update_workSchedule()
+        set_adjnumMax(get_workpattern().length - 1)
+      })
+      elem_adjustNum.addEventListener('change', () => {
+        if ( gTimer ) { clearTimeout(gTimer); }
+        gTimer = setTimeout(update_workSchedule, 300)
+        //update_workSchedule()
+      })
+
+      add_monthlyWorkSched();
+    });
+    var add_monthlyWorkSched = function() {
+      document.getElementsByClassName('fc-prev-button')[0]
+        .addEventListener('click', function(){get_monthlyWorkSched()})
+      document.getElementsByClassName('fc-next-button')[0]
+        .addEventListener('click', function(){get_monthlyWorkSched()})
+      var date =
+        document.getElementsByClassName('fc-left')[0].innerText.split(' ')
+      clearEvents()
+      update_workSchedule()
+    }
+    function workScheduler(pattern, adjust_num) {
+      var MILISEC_OF_DAY = 86400000
+      var today      = new Date()
+      var month_1st  = new Date(today.getFullYear(), today.getMonth(), 1)
+      var month_last = new Date(today.getFullYear(), (today.getMonth()+1)%12, 0)
+      var index      = (month_1st - new Date(2000, 0, 1)) / MILISEC_OF_DAY - 1
+      var ws         = []
+
+      clearEvents()
+      for ( var dt = month_1st; dt <= month_last; dt.setDate(dt.getDate()+1) ) {
+        ws[ws.length] = {'date':date_format(dt), 'sched':pattern[(index+dt.getDate()+adjust_num) % pattern.length]}
       }
-      function clearEvents() {
-        for (e of calendar.getEvents()) {
-          e.remove()
-        }
+      addWorkSched(ws)
+    }
+    function clearEvents() {
+      for (e of calendar.getEvents()) {
+        e.remove()
       }
-      function date_format(dt) {
-        var year  = dt.getFullYear()
-        var month = zeroPadding(dt.getMonth()+1, 2)
-        var day   = zeroPadding(dt.getDate(),    2)
-        return  year + "-" + month + "-" + day
-      }
-      function zeroPadding(num, length) {
-        return ('00000000000' + num).slice(-length)
-      }
-      function update_workSchedule() {
-        var pattern = get_workpattern()
-        var adj_num = get_adjnum()
-        workScheduler(pattern, adj_num)
-      }
-      function get_workpattern() {
-        num  = elem_workPattern.selectedIndex
-        return elem_workPattern.options[num].textContent
-      }
-      function get_adjnum() {
-        return Number(elem_adjustNum.value)
-      }
-      function set_adjnumMax(value) {
-        elem_adjustNum.max = value
-      }
-    </script>
-  </head>
-  <body>
-    <div id='calendar'></div>
-    <br>
-    <form action="" id="sendChangesForm" method="post" align="center">
-      <table align="center">
-      {{ form.as_table }}
-      </table>
-      {% bootstrap_button "SAVE" %}
-      <input type="hidden" name="_method" value="PUT">
-      <input type="hidden" id="changes" name="changes">
-      {% csrf_token %}
-    </form>
-  </body>
-</html>
+    }
+    function date_format(dt) {
+      var year  = dt.getFullYear()
+      var month = zeroPadding(dt.getMonth()+1, 2)
+      var day   = zeroPadding(dt.getDate(),    2)
+      return  year + "-" + month + "-" + day
+    }
+    function zeroPadding(num, length) {
+      return ('00000000000' + num).slice(-length)
+    }
+    function update_workSchedule() {
+      var pattern = get_workpattern()
+      var adj_num = get_adjnum()
+      workScheduler(pattern, adj_num)
+    }
+    function get_workpattern() {
+      num  = elem_workPattern.selectedIndex
+      return elem_workPattern.options[num].textContent
+    }
+    function get_adjnum() {
+      return Number(elem_adjustNum.value)
+    }
+    function set_adjnumMax(value) {
+      elem_adjustNum.max = value
+    }
+  </script>
+{% endblock %}
+
+{% block contents %}
+  <div id='calendar'></div>
+  <br>
+  <form action="" id="sendChangesForm" method="post" align="center">
+    {% bootstrap_form form %}
+    {% bootstrap_button "SAVE" %}
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" id="changes" name="changes">
+    {% csrf_token %}
+  </form>
+{% endblock %}

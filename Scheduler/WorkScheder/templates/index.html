@@ -1,85 +1,85 @@
+{% extends "base.html" %}
 {% load static %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <meta>
-    <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
-    <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
-    <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
-    {{ domain|json_script:"domain" }}
-    <script src="{% static 'js/workSched.js' %}"></script>
-    <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
-    <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
-    <script>
-      var calendar;
-      var months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ]
-      var changes = {};
-      var elem_sendChanges
-      var elem_changesData
-      document.addEventListener('DOMContentLoaded', function(){
-        // DOMを取得
-        var calendarEl = document.getElementById('calendar');
-        // 指定DOMにカレンダープラグインを適用する
-        calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: ['dayGrid'],
-          eventClick: rotate_workSched,
-          //events: function(info, get_monthlyWorkSched, err_log) {
-          //  get_monthlyWorkSched()
-          //}
-        });
-        calendar.render();
-        //addWorkSched(JSON.parse('{{workSched | safe}}'))
-        get_monthlyWorkSched();
 
-        //---- link function to sendChange button
-        elem_sendChanges= document.getElementById("sendChangesForm")
-        elem_changesData = document.getElementById("changes")
-        elem_sendChanges.addEventListener('submit', e => {
-          elem_changesData.value = JSON.stringify(changes)
-        });
+{% block head %}
+  <meta>
+  <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
+  <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
+  <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
+  {{ domain|json_script:"domain" }}
+  <script src="{% static 'js/workSched.js' %}"></script>
+  <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
+  <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
+  <script>
+    var calendar;
+    var months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    var changes = {};
+    var elem_sendChanges
+    var elem_changesData
+    document.addEventListener('DOMContentLoaded', function(){
+      // DOMを取得
+      var calendarEl = document.getElementById('calendar');
+      // 指定DOMにカレンダープラグインを適用する
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        plugins: ['dayGrid'],
+        eventClick: rotate_workSched,
+        //events: function(info, get_monthlyWorkSched, err_log) {
+        //  get_monthlyWorkSched()
+        //}
       });
-      var get_monthlyWorkSched = function() {
-        document.getElementsByClassName('fc-prev-button')[0]
-          .addEventListener('click', function(){get_monthlyWorkSched()})
-        document.getElementsByClassName('fc-next-button')[0]
-          .addEventListener('click', function(){get_monthlyWorkSched()})
-        var date =
-          document.getElementsByClassName('fc-left')[0].innerText.split(' ')
-        for (e of calendar.getEvents()) {
-          e.remove()
-        }
-        getWorkSched(date[1], months.indexOf(date[0])+1)
+      calendar.render();
+      //addWorkSched(JSON.parse('{{workSched | safe}}'))
+      get_monthlyWorkSched();
+
+      //---- link function to sendChange button
+      elem_sendChanges= document.getElementById("sendChangesForm")
+      elem_changesData = document.getElementById("changes")
+      elem_sendChanges.addEventListener('submit', e => {
+        elem_changesData.value = JSON.stringify(changes)
+      });
+    });
+    var get_monthlyWorkSched = function() {
+      document.getElementsByClassName('fc-prev-button')[0]
+        .addEventListener('click', function(){get_monthlyWorkSched()})
+      document.getElementsByClassName('fc-next-button')[0]
+        .addEventListener('click', function(){get_monthlyWorkSched()})
+      var date =
+        document.getElementsByClassName('fc-left')[0].innerText.split(' ')
+      for (e of calendar.getEvents()) {
+        e.remove()
       }
-      var rotate_workSched = function(info) {
-        var year          = info.event.start.getFullYear().toString()
-        var month         = zeroPadding(info.event.start.getMonth() + 1, 2)
-        var day           = zeroPadding(info.event.start.getDate(), 2)
-        var key           = year + '-' + month + '-'  + day
-        var workSched     = info.el.text.trim()
-        var new_workSched = works[
-          (works.indexOf(workSched) + 1) % works.length
-        ]
-        upd_workSched(info.el, new_workSched)
-        changes[key] = new_workSched
-      }
-      function zeroPadding(num, length) {
-        return ('00000000000' + num).slice(-length)
-      }
-    </script>
-  </head>
-  <body>
-    <div id='calendar'></div>
-    <br>
-    <form action="" id="sendChangesForm" method="post" align="center">
-      {% bootstrap_button "SAVE" button_class="btn-primary" %}
-      <input type="hidden" name="_method" value="PUT">
-      <input type="hidden" id="changes" name="changes">
-      {% csrf_token %}
-    </form>
-  </body>
-</html>
+      getWorkSched(date[1], months.indexOf(date[0])+1)
+    }
+    var rotate_workSched = function(info) {
+      var year          = info.event.start.getFullYear().toString()
+      var month         = zeroPadding(info.event.start.getMonth() + 1, 2)
+      var day           = zeroPadding(info.event.start.getDate(), 2)
+      var key           = year + '-' + month + '-'  + day
+      var workSched     = info.el.text.trim()
+      var new_workSched = works[
+        (works.indexOf(workSched) + 1) % works.length
+      ]
+      upd_workSched(info.el, new_workSched)
+      changes[key] = new_workSched
+    }
+    function zeroPadding(num, length) {
+      return ('00000000000' + num).slice(-length)
+    }
+  </script>
+{% endblock %}
+
+{% block contents %}
+  <div id='calendar'></div>
+  <br>
+  <form action="" id="sendChangesForm" method="post" align="center">
+    {% bootstrap_button "SAVE" button_class="btn-primary" %}
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" id="changes" name="changes">
+    {% csrf_token %}
+  </form>
+{% endblock %}
