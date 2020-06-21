@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.views import generic
-import json
 from datetime import datetime, date, timedelta
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from modules.mixins import MyselfOnlyMixin
+## import utils
+import json
+## import models
 from WorkScheder.models import WorkSchedule
 from accounts.models import WorkPatterns, User
 from accounts.forms import UserUpdateForm, UserWorkPatternUpdateForm
+## debug
 import pdb
 
 SERVICE_DOMAIN = 'localhost:8000'
@@ -85,10 +90,11 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             save_workSched(changes, user)
         return super().get(self.request, *args, **kwargs)
 
-class InitView(LoginRequiredMixin, generic.FormView):
-    template_name = 'init.html'
-    model = WorkPatterns
-    form_class = UserWorkPatternUpdateForm
+class UpdateView(MyselfOnlyMixin, generic.UpdateView):
+    template_name = 'update.html'
+    model         = User
+    form_class    = UserWorkPatternUpdateForm
+    success_url   = reverse_lazy('worksched:index')
 
 class ApiView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):

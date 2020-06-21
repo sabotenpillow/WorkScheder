@@ -11,13 +11,14 @@
 <body>
 <div class="container">
     <header>
-        <p class="site-name"><a href="{% url 'index' %}">Work Calendar</a></p>
+      <!--<p class="site-name"><a href="{% url 'worksched:index' %}">Work Calendar</a></p>-->
         <nav>
             <ul>
                 {% if user.is_authenticated %}
+                <li><a href="{% url 'worksched:update' user.pk %}" class="logout">Pattern Update</a></li>
                 <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
                 {% else %}
-                <!-- <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li> -->
+                <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li>
                 <li><a href="{% url 'login' %}" class="login">Login</a></li>
                 {% endif %}
                 <!--
