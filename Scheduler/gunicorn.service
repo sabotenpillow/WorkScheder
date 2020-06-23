@@ -12,6 +12,8 @@ WorkingDirectory=/home/vagrant/dev/workScheder/Scheduler
 ExecStart=/home/vagrant/dev/workScheder/.venv/bin/gunicorn \
           --pid /run/gunicorn/pid \
           --bind unix:/run/gunicorn.sock \
+          --access-logfile logs/access.log
+          --error-logfile logs/error.log
           Scheduler.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
