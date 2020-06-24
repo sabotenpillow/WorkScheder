@@ -8,8 +8,7 @@ class WorkSchedule(models.Model):
     date = \
         models.DateField(
             verbose_name = 'date',
-            auto_now_add = False,
-            unique       = True
+            auto_now_add = False
         )
     work_schedule = \
         models.CharField(
