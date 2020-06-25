@@ -8,7 +8,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'css/base.css' %}" rel="stylesheet">
   <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Work Calendar</title>
   {% block head %}{% endblock %}
   <script type="text/javascript">
@@ -19,8 +19,8 @@
 <div class="container">
   <header>
     <!--<p class="site-name"><a href="{% url 'worksched:index' %}">Work Calendar</a></p>-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <span class="navbar-bland mb-0 h3"><a href="{% url 'worksched:index' %}">Work Calendar</a></span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <span class="navbar-bland mb-0 h3"><a id="nav-title" href="{% url 'worksched:index' %}">Work Calendar</a></span>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
           {% if user.is_authenticated %}

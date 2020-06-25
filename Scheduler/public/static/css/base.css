@@ -1,0 +1,28 @@
+.navbar-dark #nav-title {
+  color: #b0c4de;
+}
+
+.navbar-dark #nav-title:hover, .navbar-dark #nav-title:focus {
+  color:           pink;
+  text-decoration: none;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color:         black;
+  font-weight:   bold;
+  border-style:  solid;
+  border-color:  black;
+  border-radius: 5px;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color:         white;
+  font-weight:   bold;
+  border-style:  solid;
+  border-color:  white;
+  border-radius: 5px;
+}
+
+.container .content {
+  margin: 1.5rem auto;
+}
