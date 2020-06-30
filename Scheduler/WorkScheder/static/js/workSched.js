@@ -14,6 +14,7 @@ var addWorkSched = function(work_sched) {
   for ( ws of work_sched ) {
     var bg_color     = worksColor[ws['sched']].bg
     var border_color = worksColor[ws['sched']].border
+    if ( ws['changed'] ) { border_color = 'deeppink' }
     calendar.addEvent({
       'title':           ws['sched'],
       'start':           ws['date'],
@@ -36,6 +37,7 @@ var getWorkSched = function(year, month) {
 
 var upd_workSched = function(element, workSched) {
   element.text                  = workSched
+  element.style.color           = 'yellow';
   element.style.backgroundColor = worksColor[workSched].bg;
-  element.style.borderColor     = worksColor[workSched].border;
+  element.style.borderColor     = 'yellow';
 }

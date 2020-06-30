@@ -55,9 +55,11 @@ def get_monthlyWorkSched(year, month, user):
         dt = date(year, month, i)
         try:
             ws = changed_ws.get(date=dt).work_schedule
+            changed_flag = True
         except WorkSchedule.DoesNotExist:
             ws = get_workSched(dt, user)
-        monthly_ws.append({ 'sched':ws, 'date':str(dt) })
+            changed_flag = False
+        monthly_ws.append({ 'sched':ws, 'date':str(dt), 'changed':changed_flag })
     return monthly_ws
 
 def lastDay(year, month):
