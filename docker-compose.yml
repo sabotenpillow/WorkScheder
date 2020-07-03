@@ -58,7 +58,7 @@ services:
     expose:
       - 8800
     ports:
-      - "8800:8800"
+      - "80:8800"
     volumes:
       - ./Scheduler/static:/var/www/static
     networks:
