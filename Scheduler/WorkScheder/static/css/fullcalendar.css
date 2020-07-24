@@ -8,3 +8,7 @@
   color: blue;
   background-color: #f0f0ff;
 }
+
+.fc-day-grid-container {
+  height: auto !important;
+}
