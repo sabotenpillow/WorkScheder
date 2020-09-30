@@ -7,11 +7,11 @@
 
 {% block head %}
   <meta>
-  <link href="{% static 'css/fullcalendar.css' %}" rel="stylesheet">
+  <link href="{% static 'css/fullcalendar.css' %}?ver=0.1.0" rel="stylesheet">
   <link href="{% static 'node_modules/@fullcalendar/core/main.min.css' %}" rel="stylesheet">
   <link href="{% static 'node_modules/@fullcalendar/daygrid/main.min.css' %}" rel="stylesheet">
   {{ domain|json_script:"domain" }}
-  <script src="{% static 'js/workSched.js' %}"></script>
+  <script src="{% static 'js/workSched.js' %}?ver=0.1.0"></script>
   <script src="{% static 'node_modules/@fullcalendar/core/main.min.js' %}"></script>
   <script src="{% static 'node_modules/@fullcalendar/daygrid/main.min.js' %}"></script>
   <script>
