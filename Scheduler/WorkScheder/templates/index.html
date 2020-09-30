@@ -45,11 +45,15 @@
         elem_changesData.value = JSON.stringify(changes)
       });
     });
+
+    //---- called when press prev/next button
     var get_monthlyWorkSched = function() {
+      //---- link function to new prev/next button
       document.getElementsByClassName('fc-prev-button')[0]
         .addEventListener('click', function(){get_monthlyWorkSched()})
       document.getElementsByClassName('fc-next-button')[0]
         .addEventListener('click', function(){get_monthlyWorkSched()})
+      //---- renew events
       var date =
         document.getElementsByClassName('fc-left')[0].innerText.split(' ')
       for (e of calendar.getEvents()) {
@@ -57,21 +61,7 @@
       }
       getWorkSched(date[1], months.indexOf(date[0])+1)
     }
-    var rotate_workSched = function(info) {
-      var year          = info.event.start.getFullYear().toString()
-      var month         = zeroPadding(info.event.start.getMonth() + 1, 2)
-      var day           = zeroPadding(info.event.start.getDate(), 2)
-      var key           = year + '-' + month + '-'  + day
-      var workSched     = info.el.text.trim()
-      var new_workSched = works[
-        (works.indexOf(workSched) + 1) % works.length
-      ]
-      upd_workSched(info.el, new_workSched)
-      changes[key] = new_workSched
-    }
-    function zeroPadding(num, length) {
-      return ('00000000000' + num).slice(-length)
-    }
+
   </script>
 {% endblock %}
 

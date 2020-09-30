@@ -9,7 +9,6 @@ var worksColor = {
 }
 //var domain = JSON.parse(document.getElementById('domain').textContent);
 
-var rotateWorkSched = function() {}
 var addWorkSched = function(work_sched) {
   for ( ws of work_sched ) {
     var bg_color     = worksColor[ws['sched']].bg
@@ -40,4 +39,22 @@ var upd_workSched = function(element, workSched) {
   element.style.color           = 'yellow';
   element.style.backgroundColor = worksColor[workSched].bg;
   element.style.borderColor     = 'yellow';
+}
+
+var rotate_workSched = function(info) {
+  var year          = info.event.start.getFullYear().toString()
+  var month         = zeroPadding(info.event.start.getMonth() + 1, 2)
+  var day           = zeroPadding(info.event.start.getDate(), 2)
+  var key           = year + '-' + month + '-'  + day
+  var workSched     = info.el.text.trim()
+  var new_workSched = works[
+    (works.indexOf(workSched) + 1) % works.length
+  ]
+  upd_workSched(info.el, new_workSched)
+  changes[key] = new_workSched
+}
+
+//---- zero padding
+function zeroPadding(num, length) {
+  return ('00000000000' + num).slice(-length)
 }

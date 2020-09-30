@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.views import generic
-from datetime import datetime, date, timedelta
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from modules.mixins import MyselfOnlyMixin
 ## import utils
+from datetime import datetime, date, timedelta
+from dateutil.relativedelta import relativedelta
 import json
 ## import models
 from WorkScheder.models import WorkSchedule
@@ -47,7 +48,8 @@ def save_workSched(worksched, user):
 
 def get_monthlyWorkSched(year, month, user):
     start      = date(year, month, 1)
-    end        = date(year, month+1, 1)
+    #end        = date(year, month+1, 1)
+    end        = start + relativedelta(months=1)
     changed_ws = \
         WorkSchedule.objects.filter(date__gte=start, date__lt=end, user_id=user.id)
     monthly_ws = []
@@ -63,7 +65,8 @@ def get_monthlyWorkSched(year, month, user):
     return monthly_ws
 
 def lastDay(year, month):
-    return (date(year, month+1, 1) - timedelta(days=1)).day
+    #return (date(year, month+1, 1) - timedelta(days=1)).day
+    return (date(year, month, 1) + relativedelta(months=1,days=-1 )).day
 
 # Create your views here.
 
