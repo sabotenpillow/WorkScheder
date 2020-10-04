@@ -8,4 +8,6 @@ urlpatterns = [
     #path('init/', views.InitView.as_view(), name='init'),
     path('set-pattern/<int:pk>', views.SetPatternView.as_view(), name='setpattern'),
     path('api/worksched/<int:year>/<int:month>', views.ApiView.as_view(), name='api'),
+    path('worksched/<int:year>/<int:month>/image',
+        views.getSchedWithImageView.as_view(), name='image'),
 ]

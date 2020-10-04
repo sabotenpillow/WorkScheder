@@ -7,6 +7,7 @@ from modules.mixins import MyselfOnlyMixin
 ## import utils
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
+import imgkit
 import json
 ## import models
 from WorkScheder.models import WorkSchedule
@@ -111,3 +112,25 @@ class ApiView(LoginRequiredMixin, generic.View):
         ws    = get_monthlyWorkSched(year, month, user)
         return HttpResponse(json.dumps(ws))
 
+class getSchedWithImageView(LoginRequiredMixin, generic.View):
+    def get(self, request, *args, **kwargs):
+        ##---- prepare for accessing to Web page
+        host = request.get_host()
+        path = str(reverse_lazy('worksched:index'))
+        cookies = request.COOKIES
+        options = {
+            'xvfb': '',
+            'cookie': [
+                ('csrftoken', cookies['csrftoken']),
+                ('sessionid', cookies['sessionid']),
+            ],
+        }
+
+        ##---- access to Web page
+        image = None
+        try:
+            image = imgkit.from_url(host+path, False, options=options)
+        except:
+            image = imgkit.from_string('Error', False)
+        #pdb.set_trace()
+        return HttpResponse(image, content_type='image/jpeg')
