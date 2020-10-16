@@ -7,7 +7,8 @@ from modules.mixins import MyselfOnlyMixin
 ## import utils
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
-import imgkit
+import imgkit, io
+from PIL import Image
 import json
 ## import models
 from WorkScheder.models import WorkSchedule
@@ -117,6 +118,7 @@ class getSchedWithImageView(LoginRequiredMixin, generic.View):
         ##---- prepare for accessing to Web page
         host = request.get_host()
         path = str(reverse_lazy('worksched:index'))
+        url = 'http://' + host + path
         cookies = request.COOKIES
         options = {
             'xvfb': '',
@@ -127,10 +129,19 @@ class getSchedWithImageView(LoginRequiredMixin, generic.View):
         }
 
         ##---- access to Web page
-        image = None
+        img = None
         try:
-            image = imgkit.from_url(host+path, False, options=options)
+            img = imgkit.from_url(url, False, options=options)
+            #img = imgkit.from_string('Success', False, options=options)
         except:
-            image = imgkit.from_string('Error', False)
+            img = imgkit.from_string('Error', False, options=options)
+
         #pdb.set_trace()
-        return HttpResponse(image, content_type='image/jpeg')
+        img_io = io.BytesIO(img)
+        img_pil = Image.open(img_io)
+
+        ## generate HttpResponse
+        #response = HttpResponse(image, content_type='image/jpeg')
+        response = HttpResponse(content_type='image/jpeg')
+        img_pil.save(response, 'jpeg')
+        return response
