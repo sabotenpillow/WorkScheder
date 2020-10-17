@@ -7,8 +7,10 @@ from modules.mixins import MyselfOnlyMixin
 ## import utils
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
+from time import sleep
+import requests
 import imgkit, io
-from PIL import Image
+#from PIL import Image
 import json
 ## import models
 from WorkScheder.models import WorkSchedule
@@ -119,29 +121,36 @@ class getSchedWithImageView(LoginRequiredMixin, generic.View):
         host = request.get_host()
         path = str(reverse_lazy('worksched:index'))
         url = 'http://' + host + path
-        cookies = request.COOKIES
-        options = {
-            'xvfb': '',
-            'cookie': [
-                ('csrftoken', cookies['csrftoken']),
-                ('sessionid', cookies['sessionid']),
-            ],
+        #cookies = request.COOKIES
+        cookies = {
+            'csrftoken': request.COOKIES['csrftoken'],
+            'sessionid': request.COOKIES['sessionid'],
         }
+        #options = {
+        #    'xvfb': '',
+        #    'cookie': [
+        #        ('csrftoken', cookies['csrftoken']),
+        #        ('sessionid', cookies['sessionid']),
+        #    ],
+        #}
 
         ##---- access to Web page
-        img = None
-        try:
-            img = imgkit.from_url(url, False, options=options)
-            #img = imgkit.from_string('Success', False, options=options)
-        except:
-            img = imgkit.from_string('Error', False, options=options)
+        res = requests.get(url, cookies=cookies, timeout=0.1)
+        #pdb.set_trace()
+        #img = None
+        #try:
+        #    img = imgkit.from_url(url, False, options=options)
+        #    #img = imgkit.from_string('Success', False, options=options)
+        #except:
+        #    img = imgkit.from_string('Error', False, options=options)
 
         #pdb.set_trace()
-        img_io = io.BytesIO(img)
-        img_pil = Image.open(img_io)
+        #img_io = io.BytesIO(img)
+        #img_pil = Image.open(img_io)
 
         ## generate HttpResponse
+        response = HttpResponse(res.text)
         #response = HttpResponse(image, content_type='image/jpeg')
-        response = HttpResponse(content_type='image/jpeg')
-        img_pil.save(response, 'jpeg')
+        #response = HttpResponse(img, content_type='image/jpeg')
+        #img_pil.save(response, 'jpeg')
         return response
